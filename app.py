@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Optional
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import AIMessage, HumanMessage
@@ -33,8 +33,10 @@ def load_keys():
     load_dotenv()
     gemini_key = os.getenv("GOOGLE_API_KEY")
     hf_token = os.getenv("HUGGING_FACE_TOKEN")
+    literal_api_key = os.getenv("LITERAL_API_KEY")
     os.environ['GOOGLE_API_KEY'] = gemini_key
     os.environ['HF_TOKEN'] = hf_token
+    os.environ['LITERAL_API_KEY'] = literal_api_key
 
 def load_db():
     """
@@ -141,6 +143,33 @@ _inputs = RunnableParallel(
 
 # this is the main chain that is executed
 chain = _inputs | ANSWER_PROMPT | llm | StrOutputParser()
+
+@cl.password_auth_callback
+def auth_callback(username: str, password: str):
+    username_stored = os.environ.get("CHAINTLIT_USERNAME")
+    password_stored = os.environ.get("CHAINTLIT_PASSWORD")
+
+    if username_stored is None or password_stored is None:
+        raise ValueError(
+            "Username or password not set. Please set CHAINTLIT_USERNAME and "
+            "CHAINTLIT_PASSWORD environment variables."
+        )
+
+    if (username, password) == (username_stored, password_stored):
+        return cl.User(
+            identifier="pawel", metadata={"role": "admin", "provider": "credentials"}
+        )
+    else:
+        return None
+    
+@cl.oauth_callback
+def oauth_callback(
+    provider_id: str,
+    token: str,
+    raw_user_data: Dict[str, str],
+    default_user: cl.User,
+    ) -> Optional[cl.User]:
+    return default_user
 
 # set stuff on the beginning of the chat
 @cl.on_chat_start
