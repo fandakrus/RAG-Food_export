@@ -7,6 +7,17 @@ from src.chain import chain, write_conversation_to_file
 
 @cl.password_auth_callback
 def auth_callback(username: str, password: str):
+    """
+    Authenticates the user based on the provided username and password.
+
+    Args:
+        username (str): The username to authenticate.
+        password (str): The password to authenticate.
+
+    Returns:
+        cl.User or None: If the authentication is successful, returns a `cl.User` object
+        with the user's identifier, role, and provider. Otherwise, returns None.
+    """
     username_stored = os.environ.get("CHAINTLIT_USERNAME")
     password_stored = os.environ.get("CHAINTLIT_PASSWORD")
 
@@ -25,6 +36,7 @@ def auth_callback(username: str, password: str):
     
 @cl.oauth_callback
 def oauth_callback(
+    
     provider_id: str,
     token: str,
     raw_user_data: Dict[str, str],
@@ -32,10 +44,23 @@ def oauth_callback(
     ) -> Optional[cl.User]:
     return default_user
 
+@cl.on_chat_resume
+async def on_chat_resume(thread):
+    history = []
+    root_messages = [m for m in thread["steps"] if m["parentId"] == None]
+    for message in root_messages:
+        if message["type"] == "user_message":
+            history.append((message["output"], None))
+        elif len(history) > 0:
+            history[-1] = (history[-1][0], message["output"])
+        else:
+            pass
+    cl.user_session.set("history", history)
+    cl.user_session.set("chain", chain)
+            
 # set stuff on the beginning of the chat
 @cl.on_chat_start
 async def start():
-    # chain = create_source_chain()
     msg = cl.Message(content="Starting the bot...")
     history = []
     await msg.send()
