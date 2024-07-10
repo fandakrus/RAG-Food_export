@@ -18,8 +18,8 @@ def auth_callback(username: str, password: str):
         cl.User or None: If the authentication is successful, returns a `cl.User` object
         with the user's identifier, role, and provider. Otherwise, returns None.
     """
-    username_stored = os.environ.get("CHAINTLIT_USERNAME")
-    password_stored = os.environ.get("CHAINTLIT_PASSWORD")
+    username_stored = os.environ.get("CHAINLIT_USERNAME")
+    password_stored = os.environ.get("CHAINLIT_PASSWORD")
 
     if username_stored is None or password_stored is None:
         raise ValueError(
@@ -29,7 +29,7 @@ def auth_callback(username: str, password: str):
 
     if (username, password) == (username_stored, password_stored):
         return cl.User(
-            identifier="pawel", metadata={"role": "admin", "provider": "credentials"}
+            identifier="frank", metadata={"role": "admin", "provider": "credentials"}
         )
     else:
         return None
