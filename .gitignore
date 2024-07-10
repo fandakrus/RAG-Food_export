@@ -3,6 +3,7 @@ data/
 llama-2-7b-chat.ggmlv3.q8_0.bin
 vectorstores/
 conversations/
+users.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
