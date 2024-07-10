@@ -36,16 +36,53 @@ def auth_callback(username: str, password: str):
     
 @cl.oauth_callback
 def oauth_callback(
-    
     provider_id: str,
     token: str,
     raw_user_data: Dict[str, str],
     default_user: cl.User,
-    ) -> Optional[cl.User]:
+) -> Optional[cl.User]:
+    """
+    Callback function for handling OAuth authentication.
+    This function is called if environmentals variable for oauth are set.
+    Just setting them correctly is enough to make it work.
+
+    Args:
+        provider_id (str): The ID of the authentication provider.
+        token (str): The authentication token.
+        raw_user_data (Dict[str, str]): Raw user data received from the authentication provider.
+        default_user (cl.User): The default user object.
+
+    Returns:
+        Optional[cl.User]: The user object after authentication, or None if authentication fails.
+    """
     return default_user
+            
+@cl.on_chat_start
+async def start():
+    """
+    Starts the bot and initializes the necessary variables.
+    History is for storing content of the conversation.
+    Chain is in this code presistently set for each usersession.
+    """
+    msg = cl.Message(content="Starting the bot...")
+    history = []
+    await msg.send()
+    msg.content = "Hi, Welcome to Food safety Bot. What is your query?"
+    await msg.update()
+    cl.user_session.set("history", history)
+    cl.user_session.set("chain", chain)
 
 @cl.on_chat_resume
 async def on_chat_resume(thread):
+    """
+    Resumes the chat conversation and updates the chat history and chain.
+
+    Args:
+        thread (dict): The chat thread containing the conversation steps.
+
+    Returns:
+        None
+    """
     history = []
     root_messages = [m for m in thread["steps"] if m["parentId"] == None]
     for message in root_messages:
@@ -57,21 +94,19 @@ async def on_chat_resume(thread):
             pass
     cl.user_session.set("history", history)
     cl.user_session.set("chain", chain)
-            
-# set stuff on the beginning of the chat
-@cl.on_chat_start
-async def start():
-    msg = cl.Message(content="Starting the bot...")
-    history = []
-    await msg.send()
-    msg.content = "Hi, Welcome to Food safety Bot. What is your query?"
-    await msg.update()
-    cl.user_session.set("history", history)
-    cl.user_session.set("chain", chain)
 
-# this is executed when the message is received
+
 @cl.on_message
 async def on_message(message: cl.Message):
+    """
+    Process incoming messages and generate a response.
+
+    Args:
+        message (cl.Message): The incoming message object.
+
+    Returns:
+        None
+    """
     chain = cl.user_session.get("chain")
     history = cl.user_session.get("history")
     cb = cl.AsyncLangchainCallbackHandler(
@@ -84,5 +119,8 @@ async def on_message(message: cl.Message):
 
 @cl.on_chat_end 
 async def end():
+    """
+    Ends the chat conversation and writes the conversation history to a file.
+    Not necessary needed as the history of conversation is available at Literal AI.
+    """
     write_conversation_to_file(cl.user_session.get("history"))
-    await cl.Message(content="Goodbye").send()
