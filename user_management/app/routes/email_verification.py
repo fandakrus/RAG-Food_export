@@ -3,12 +3,21 @@ from .. import db
 from ..models import EmailVerificationToken, User
 
 
-email_verificatoin_bp = Blueprint('verify-email', __name__)
+email_verification_bp = Blueprint('verify_email', __name__)
 
-@email_verificatoin_bp.route('/verify-email/<token>')
+@email_verification_bp.route('/verify_email/<token>')
 def verify_email(token):
-    verification_token = EmailVerificationToken.query.filter_by(token=token).first_or_404()
+    verification_token = EmailVerificationToken.query.filter_by(token=token).first()
+    
+    if not verification_token:
+        return render_template('email_cannot_verify.html')
+    
     user = User.query.get(verification_token.user_id)
-    user.email_verified = True
-    db.session.commit()
-    return render_template('email_verified.html')
+
+    try:
+        user.email_verified = True
+        db.session.commit()
+        return render_template('email_verified.html')
+    except Exception as e:
+        print(f"Error verifying email: {e}")
+        return render_template('email_cannot_verify.html')
