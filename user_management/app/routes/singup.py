@@ -8,14 +8,15 @@ auth_bp = Blueprint('auth', __name__)
 def signup():
 	data = request.get_json()
 	email = data.get('email')
+	name = data.get('name')
 	password = data.get('password')
 
-	if not email or not password:
+	if not email or not name or not password:
 		return jsonify({'success': False, 'message': 'All fields are required'}), 400
 
 	hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-	new_user = User(email=email, password=hashed_password)
+	new_user = User(email=email, name=name, password=hashed_password)
 	db.session.add(new_user)
 	db.session.commit()
 

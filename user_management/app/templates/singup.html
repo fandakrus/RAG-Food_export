@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="your-logo-url.png" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}" type="image/x-icon">
 </head>
 
 <body>
     <div class="container">
-        <img src="your-logo-url.png" alt="Logo">
+        <img src="{{ url_for('static', filename='icon.png') }}" alt="Logo">
         <p>Signup with correct email address</p>
         <div class="error-message" id="error-message">Error: Please fill out all fields correctly.</div>
         <div class="wrappero">
@@ -56,7 +56,7 @@
             </form>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 
 </html>
