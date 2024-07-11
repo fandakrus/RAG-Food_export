@@ -1,3 +1,5 @@
+"""This is for creating the embeding store based on the documents in the data folder
+If not run on good GPU running google colab on TPU device is faster"""
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader, PyPDFium2Loader
 from langchain_huggingface import HuggingFaceEmbeddings

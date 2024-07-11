@@ -33,29 +33,7 @@ def auth_callback(username: str, password: str):
         )
     else:
         return None
-    
-@cl.oauth_callback
-def oauth_callback(
-    provider_id: str,
-    token: str,
-    raw_user_data: Dict[str, str],
-    default_user: cl.User,
-) -> Optional[cl.User]:
-    """
-    Callback function for handling OAuth authentication.
-    This function is called if environmentals variable for oauth are set.
-    Just setting them correctly is enough to make it work.
 
-    Args:
-        provider_id (str): The ID of the authentication provider.
-        token (str): The authentication token.
-        raw_user_data (Dict[str, str]): Raw user data received from the authentication provider.
-        default_user (cl.User): The default user object.
-
-    Returns:
-        Optional[cl.User]: The user object after authentication, or None if authentication fails.
-    """
-    return default_user
             
 @cl.on_chat_start
 async def start():

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgb(48, 48, 48); /* Slightly darker background color */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: rgb(33, 33, 33);
+            border: 1px solid rgb(66, 66, 66);
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            height: auto;
+            max-height: 90%;
+            text-align: center;
+        }
+        .container img {
+            max-width: 60%;
+            max-height: 90px;
+            margin-bottom: 20px;
+        }
+        .container p {
+            margin: 0px;
+            font-family: Inter, sans-serif;
+            font-weight: 400;
+            font-size: 1rem;
+            line-height: 1.5;
+            text-align: center;
+            color: rgb(238, 238, 238);
+            margin-bottom: 24px;
+        }
+        .input-wrap {
+            font-family: Inter, sans-serif;
+            font-weight: 400;
+            font-size: 1rem;
+            line-height: 1.4375em;
+            color: rgb(238, 238, 238);
+            box-sizing: border-box;
+            cursor: text;
+            display: inline-flex;
+            -moz-box-align: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            border-radius: 8px;
+            border: 1px solid rgb(66, 66, 66);
+        }
+        .wrap-wrap {
+            display: inline-flex;
+            flex-direction: column;
+            position: relative;
+            min-width: 0px;
+            padding: 0px;
+            margin: 4px 0px;
+            border: 0px;
+            vertical-align: top;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .wrap-wrap-wrap {
+            display: inline-flex;
+            flex-direction: column;
+            position: relative;
+            min-width: 0px;
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+            vertical-align: top;
+            width: 100%;
+        }
+        .container input {
+            font: inherit;
+            letter-spacing: inherit;
+            color: currentcolor;
+            border: 0px;
+            box-sizing: content-box;
+            background: none;
+            margin: 0px;
+            display: block;
+            min-width: 0px;
+            width: 100%;
+            animation-name: mui-auto-fill-cancel;
+            animation-duration: 10ms;
+            padding: 16.5px 14px;
+            height: 15px;
+            min-height: auto;
+        }
+        .container input[type="submit"] {
+            display: inline-flex;
+            -moz-box-align: center;
+            align-items: center;
+            -moz-box-pack: center;
+            justify-content: center;
+            position: relative;
+            box-sizing: border-box;
+            outline: 0px;
+            border: 0px;
+            margin: 24px 0px 0px;
+            cursor: pointer;
+            user-select: none;
+            vertical-align: middle;
+            appearance: none;
+            text-decoration: none;
+            font-family: Inter, sans-serif;
+            font-weight: 500;
+            font-size: 0.875rem;
+            line-height: 1.75;
+            text-transform: uppercase;
+            min-width: 64px;
+            padding: 6px 16px;
+            border-radius: 8px;
+            transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1), border-color 250ms cubic-bezier(0.4, 0, 0.2, 1), color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgb(255, 255, 255);
+            background-color: rgb(248, 0, 97);
+            box-shadow: none;
+            width: 100%;
+            height: auto;
+        }
+        .wrappero {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+        .wrap4 {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="your-logo-url.png" alt="Logo">
+        <p>Signup with correct email address</p>
+        <div class="wrappero">
+        <form action="/signup" method="POST">
+            <div class="wrap4">
+            <div class="wrap-wrap-wrap">
+            <div class="wrap-wrap">
+            <div class="input-wrap">
+                <input type="email" name="email" placeholder="Email address" required>
+            </div>
+            </div>
+            </div>
+            </div>
+            <div class="wrap4">
+            <div class="wrap-wrap-wrap">
+            <div class="wrap-wrap">
+            <div class="input-wrap">
+            <input type="text" name="Name" placeholder="Name" required>
+            </div>
+            </div>
+            </div>
+            </div>
+            <div class="wrap4">
+            <div class="wrap-wrap-wrap">
+            <div class="wrap-wrap">
+            <div class="input-wrap">
+            <input type="password" name="password" placeholder="Password" required>
+            </div>
+            </div>
+            </div>
+            </div>
+            <input type="submit" value="SIGN UP">
+        </form>
+    </div>
+    </div>
+</body>
+</html>
