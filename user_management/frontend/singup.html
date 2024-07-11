@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="your-logo-url.png" type="image/x-icon">
 </head>
 
 <body>
@@ -14,7 +15,7 @@
         <p>Signup with correct email address</p>
         <div class="error-message" id="error-message">Error: Please fill out all fields correctly.</div>
         <div class="wrappero">
-            <form action="/signup" method="POST">
+            <form id="signup-form">
                 <div class="wrap4">
                     <div class="wrap-wrap-wrap">
                         <div class="wrap-wrap">
@@ -55,30 +56,7 @@
             </form>
         </div>
     </div>
-    <script>
-        function validateForm() {
-            const email = document.querySelector('input[name="email"]').value;
-            const name = document.querySelector('input[name="name"]').value;
-            const password = document.querySelector('input[name="password"]').value;
-            const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
-            const errorMessage = document.getElementById('error-message');
-
-            if (!email || !name || !password || !confirmPassword) {
-                errorMessage.textContent = 'Error: Please fill out all fields correctly.';
-                errorMessage.style.display = 'block';
-                return false;
-            }
-
-            if (password !== confirmPassword) {
-                errorMessage.textContent = 'Error: Passwords do not match.';
-                errorMessage.style.display = 'block';
-                return false;
-            }
-
-            errorMessage.style.display = 'none';
-            return true;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>
