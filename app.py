@@ -1,38 +1,52 @@
 import os
 from typing import Dict, Optional
+import sqlite3
+import bcrypt
 
 import chainlit as cl
 from src.chain import chain, write_conversation_to_file
 
+DATABASE_PATH = 'instance/users.db'
 
 @cl.password_auth_callback
-def auth_callback(username: str, password: str):
+def auth_callback(email: str, password: str):
     """
-    Authenticates the user based on the provided username and password.
+    Authenticates the user based on the provided email and password.
 
     Args:
-        username (str): The username to authenticate.
+        email (str): The email to authenticate.
         password (str): The password to authenticate.
 
     Returns:
         cl.User or None: If the authentication is successful, returns a `cl.User` object
         with the user's identifier, role, and provider. Otherwise, returns None.
     """
-    username_stored = os.environ.get("CHAINLIT_USERNAME")
-    password_stored = os.environ.get("CHAINLIT_PASSWORD")
+    conn = sqlite3.connect(DATABASE_PATH)
+    cursor = conn.cursor()
 
-    if username_stored is None or password_stored is None:
-        raise ValueError(
-            "Username or password not set. Please set CHAINTLIT_USERNAME and "
-            "CHAINTLIT_PASSWORD environment variables."
-        )
+    try:
+        cursor.execute("SELECT email, password, role, email_verified FROM user WHERE email = ?", (email,))
+        user = cursor.fetchone()
 
-    if (username, password) == (username_stored, password_stored):
-        return cl.User(
-            identifier="frank", metadata={"role": "admin", "provider": "credentials"}
-        )
-    else:
+        if user is None:
+            return None
+
+        stored_email, stored_password_hash, role, email_verified = user
+
+        if not email_verified:
+            return None
+
+        if bcrypt.checkpw(password.encode('utf-8'), stored_password_hash.encode('utf-8')):
+            return cl.User(
+                identifier=stored_email, metadata={"role": role, "provider": "credentials"}
+            )
+        else:
+            return None
+    except Exception as e:
+        print(f"Error during authentication: {e}")
         return None
+    finally:
+        conn.close()
 
             
 @cl.on_chat_start
