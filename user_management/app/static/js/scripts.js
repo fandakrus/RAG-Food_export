@@ -42,7 +42,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
     errorMessage.style.display = 'none';
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/signup', {
+        const response = await fetch('/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
 
         if (response.ok) {
             // Redirect to email verification page
-            window.location.href = './email_verify.html';
+            window.location.href = './email_verify_page';
         } else {
             // Display error message
             errorMessage.textContent = `Error: ${result.message}`;
