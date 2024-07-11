@@ -1,8 +1,26 @@
-from flask import Blueprint, request, jsonify
-from .. import db, bcrypt
-from ..models import User, Allowed_user
+from flask import Blueprint, request, jsonify, redirect, url_for, flash
+from flask_mail import Message
+import uuid
+from .. import db, bcrypt, mail
+from ..models import User, Allowed_user, EmailVerificationToken
 
 auth_bp = Blueprint('auth', __name__)
+
+def send_verification_email(user, token):
+    verification_link = url_for('verify_email', token=token, _external=True)
+    msg = Message('Verify your email address', sender='your-email@gmail.com', recipients=[user.email])
+    msg.body = f"""
+    Hi {user.username},
+
+    Please click the link below to verify your email address:
+    {verification_link}
+
+    If you did not request this, please ignore this email.
+
+    Thank you,
+    Your Website Team
+    """
+    mail.send(msg)
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
@@ -31,5 +49,16 @@ def signup():
 	except Exception as e:
 		print(f"Error adding user to the database: {e}")
 		return jsonify({'success': False, 'message': 'Unexpected error occurred'}), 500
+	
+	try:
+		token = str(uuid.uuid4())
+		verification_token = EmailVerificationToken(user_id=new_user.id, token=token)
+		db.session.add(verification_token)
+		db.session.commit()
+	except Exception as e:
+		print(f"Error adding verification token to the database: {e}")
+		return jsonify({'success': False, 'message': 'Unexpected error occurred'}), 500
+	
+	send_verification_email(new_user, token)
 
 	return jsonify({'success': True, 'message': 'User registered successfully'}), 201
