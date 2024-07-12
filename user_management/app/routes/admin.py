@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import login_user, logout_user, login_required
-import bcrypt
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask_login import login_user, logout_user, login_required, current_user
 from ..models import User
-from .. import login_manager
+from .. import login_manager, db, bcrypt
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -13,14 +12,20 @@ def load_user(user_id):
 @admin_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        if request.is_json:
+            data = request.get_json()
+            email = data.get('email')
+            password = data.get('password')
+        else:
+            email = request.form['email']
+            password = request.form['password']
+
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')) and user.role == "admin":
             login_user(user)
-            return redirect(url_for('admin.admin_dashboard'))
+            return jsonify({'message': 'Login successful', 'redirect': url_for('admin.admin_dashboard')}), 200
         else:
-            flash('Invalid email or password')
+            return jsonify({'message': 'Invalid email or password'}), 401
     return render_template('admin/login.html')
 
 @admin_bp.route('/logout')
@@ -32,10 +37,75 @@ def logout():
 @admin_bp.route('/')
 @login_required
 def admin_dashboard():
-    return render_template('admin/dashboard.html')
+    user_count = User.query.count()
+    return render_template('admin/dashboard.html', user_count=user_count)
 
 @admin_bp.route('/users')
-@login_required
 def admin_users():
-    # Logic to fetch and display users
-    return render_template('admin/users.html')
+    search_query = request.args.get('search', '')
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+
+    if search_query:
+        pagination = User.query.filter(User.email.ilike(f'%{search_query}%')).paginate(page=page, per_page=per_page, error_out=False)
+    else:
+        pagination = User.query.paginate(page=page, per_page=per_page, error_out=False)
+
+    users = pagination.items
+    return render_template('admin/users.html', users=users, pagination=pagination, search_query=search_query)
+
+@admin_bp.route('/add_user', methods=['GET', 'POST'])
+@login_required
+def add_user():
+    if request.method == 'POST':
+        # Logic to add user
+        return redirect(url_for('admin.admin_users'))
+    return render_template('admin/add_user.html')
+
+@admin_bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def edit_user(user_id):
+    user = User.query.get_or_404(user_id)
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify({'status': 'error', 'message': 'Invalid JSON data'}), 400
+        user.email = data.get('email')
+        user.name = data.get('name')
+        user.role = data.get('role')
+        user.email_verified = data.get('email_verified', False)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'User updated successfully'}), 200
+    return render_template('admin/edit_user.html', user=user)
+
+@admin_bp.route('/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    if user.id == current_user.id:
+        return jsonify({'status': 'error', 'message': 'You cannot delete yourself!'}), 400
+    else:
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'User deleted successfully'}), 200
+    
+@admin_bp.route('/change_password/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def change_password(user_id):
+    user = User.query.get_or_404(user_id)
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify({'status': 'error', 'message': 'Invalid JSON data'}), 400
+        
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+        
+        if new_password != confirm_password:
+            return jsonify({'status': 'error', 'message': 'Passwords do not match!'}), 400
+        
+        user.password = bcrypt.generate_password_hash(new_password)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Password changed successfully'}), 200
+    
+    return render_template('admin/change_password.html', user=user)

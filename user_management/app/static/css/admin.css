@@ -1,0 +1,14 @@
+#response-message {
+    display: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+}
+#response-message.success {
+    border-color: green;
+    color: green;
+}
+#response-message.error {
+    border-color: red;
+    color: red;
+}

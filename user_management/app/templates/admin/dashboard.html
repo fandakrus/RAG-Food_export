@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('admin.admin_users') }}">Users</a></li>
+                <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Welcome, {{ current_user.name }}</h2>
+            <p>This is the admin dashboard where you can manage users and view statistics.</p>
+        </section>
+        <section>
+            <h2>Statistics</h2>
+            <p>Number of users: {{ user_count }}</p>
+        </section>
+        <section>
+            <a href="{{ url_for('admin.add_user') }}">Add more users</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Your Company</p>
+    </footer>
+</body>
+</html>

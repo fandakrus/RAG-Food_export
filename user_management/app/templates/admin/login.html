@@ -6,8 +6,8 @@
 </head>
 <body>
     <h1>Admin Login</h1>
-    <form method="POST" action="{{ url_for('admin.login') }}">
-        <label for="email">Username:</label>
+    <form id="loginForm">
+        <label for="email">Email:</label>
         <input type="text" id="email" name="email" required>
         <br>
         <label for="password">Password:</label>
@@ -15,5 +15,7 @@
         <br>
         <button type="submit">Login</button>
     </form>
+    <div id="responseMessage"></div>
+    <script src="{{ url_for('static', filename='js/admin/login.js') }}"></script>
 </body>
 </html>
