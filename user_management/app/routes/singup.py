@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_mail import Message
-from .. import db, mail, bcrypt
+from .. import db, bcrypt
 from ..models import User, Allowed_user, EmailVerificationToken
 import uuid
 import boto3
@@ -23,6 +22,18 @@ def send_verification_email(user, token):
     Thank you,
     Your FOODBOT team
     """
+    body_html = f"""
+    <html>
+    <head></head>
+    <body>
+        <p>Hi {user.name},</p>
+        <p>Please click the link below to verify your email address:</p>
+        <p><a href="{verification_link}">{verification_link}</a></p>
+        <p>If you did not request this, please ignore this email.</p>
+        <p>Thank you,<br>Your FOODBOT team</p>
+    </body>
+    </html>
+    """
     try:
         response = ses_client.send_email(
         Source='krus.frantisek@gmail.com',
@@ -37,6 +48,10 @@ def send_verification_email(user, token):
             'Body': {
                 'Text': {
                     'Data': body_text,
+                    'Charset': 'UTF-8'
+                },
+                'Html': {
+                    'Data': body_html,
                     'Charset': 'UTF-8'
                 }
             }

@@ -9,7 +9,6 @@ from .config import Config
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 cors = CORS()
-mail = Mail()
 
 def create_app():
     app = Flask(__name__)
@@ -18,7 +17,6 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     cors.init_app(app)
-    mail.init_app(app)
 
     with app.app_context():
         from .routes import init_routes
