@@ -3,13 +3,15 @@ from flask_mail import Message
 from .. import db, mail, bcrypt
 from ..models import User, Allowed_user, EmailVerificationToken
 import uuid
+import boto3
 
 auth_bp = Blueprint('auth', __name__)
 
 def send_verification_email(user, token):
-    msg = Message('Email Verification', sender='noreply@foodbot.com', recipients=[user.email])
+    ses_client = boto3.client('ses', region_name='eu-central-1')
     verification_link = f"http://localhost:5000/verify_email/{token}"
-    msg.body = f"""
+    subject = "Verify your email address"
+    body_text = f"""
     Hi {user.name},
 
     Please click the link below to verify your email address:
@@ -22,7 +24,25 @@ def send_verification_email(user, token):
     Your FOODBOT team
     """
     try:
-        mail.send(msg)
+        response = ses_client.send_email(
+        Source='krus.frantisek@gmail.com',
+        Destination={
+            'ToAddresses': ["fanda747@seznam.cz"]
+        },
+        Message={
+            'Subject': {
+                'Data': subject,
+                'Charset': 'UTF-8'
+            },
+            'Body': {
+                'Text': {
+                    'Data': body_text,
+                    'Charset': 'UTF-8'
+                }
+            }
+        }
+    )   
+        print(response)
         return True
     except Exception as e:
         print(f"Error sending email: {e}")
