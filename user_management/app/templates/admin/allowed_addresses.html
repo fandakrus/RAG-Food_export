@@ -7,7 +7,7 @@
 </head>
 <body>
     <header>
-        <h1>Admin - Users</h1>
+        <h1>Admin - Allowed addresses</h1>
         <nav>
             <ul>
                 <li><a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a></li>
@@ -27,22 +27,18 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
                         <th>Email</th>
-                        <th>Role</th>
-                        <th>Actions</th>
+                        <th>Date added</th>
+                        <th>Actoins</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.role }}</td>
+                        <td>{{ user.created_at }}</td>
                         <td>
-                            <button onclick="editUser('{{ user.id }}')">Edit</button>
                             <button onclick="deleteUser('{{ user.id }}')">Delete</button>
-                            <button onclick="changePassword('{{ user.id }}')">Change Password</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -50,17 +46,20 @@
             </table>
             <div class="pagination">
                 {% if pagination.has_prev %}
-                <a href="{{ url_for('admin.admin_users', page=pagination.prev_num) }}">Previous</a>
+                <a href="{{ url_for('admin.allowed_addresses', page=pagination.prev_num) }}">Previous</a>
                 {% endif %}
                 {% if pagination.has_next %}
-                <a href="{{ url_for('admin.admin_users', page=pagination.next_num) }}">Next</a>
+                <a href="{{ url_for('admin.allowed_addresses', page=pagination.next_num) }}">Next</a>
                 {% endif %}
             </div>
         </section>
+        <div style="margin-top: 20px;">
+            <a href="{{ url_for('admin.add_address') }}">Add New Address</a>
+        </div>
     </main>
     <footer>
         <p>&copy; 2024 Your Company</p>
     </footer>
-    <script src="{{ url_for('static', filename='js/admin/users.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/allowed_addresses.js') }}"></script>
 </body>
 </html>

@@ -12,6 +12,7 @@
             <ul>
                 <li><a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ url_for('admin.admin_users') }}">Users</a></li>
+                <li><a href="{{ url_for('admin.allowed_addresses') }}">Allowed addresses</a></li>
                 <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
             </ul>
         </nav>
@@ -26,7 +27,7 @@
             <p>Number of users: {{ user_count }}</p>
         </section>
         <section>
-            <a href="{{ url_for('admin.add_user') }}">Add more users</a>
+            <a href="{{ url_for('admin.allowed_addresses') }}">Add more users</a>
         </section>
     </main>
     <footer>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Address</title>
+</head>
+<body>
+    <h1>Add Address</h1>
+    <div id="responseMessage"></div>
+    <form id="addAddressForm" onsubmit="submitForm(event)">
+        <div>
+            <label for="file">Upload CSV or Text File:</label>
+            <input type="file" id="file" name="file" accept=".csv, .txt">
+        </div>
+        <div>
+            <label for="emails">Or Enter Email Addresses (comma-or-newline-separated):</label>
+            <textarea id="emails" name="emails" rows="4" cols="50"></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('admin.allowed_addresses') }}">Allowed Addresses</a>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin/add_address.js') }}"></script>
+</body>
+</html>

@@ -1,6 +1,10 @@
+import csv
+from io import StringIO
+import re
+import boto3
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from ..models import User
+from ..models import User, Allowed_user
 from .. import login_manager, db, bcrypt
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -21,7 +25,7 @@ def login():
             password = request.form['password']
 
         user = User.query.filter_by(email=email).first()
-        if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')) and user.role == "admin":
+        if user and bcrypt.check_password_hash(user.password.encode('utf-8'), password.encode('utf-8')) and user.role == "admin":
             login_user(user)
             return jsonify({'message': 'Login successful', 'redirect': url_for('admin.admin_dashboard')}), 200
         else:
@@ -109,3 +113,143 @@ def change_password(user_id):
         return jsonify({'status': 'success', 'message': 'Password changed successfully'}), 200
     
     return render_template('admin/change_password.html', user=user)
+
+@admin_bp.route('/allowed_addresses')
+@login_required
+def allowed_addresses():
+    search_query = request.args.get('search', '')
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+
+    if search_query:
+        pagination = Allowed_user.query.filter(User.email.ilike(f'%{search_query}%')).paginate(page=page, per_page=per_page, error_out=False)
+    else:
+        pagination = Allowed_user.query.paginate(page=page, per_page=per_page, error_out=False)
+
+    users = pagination.items
+    return render_template('admin/allowed_addresses.html', users=users, pagination=pagination, search_query=search_query)
+
+@admin_bp.route('/delete_address/<int:user_id>', methods=['POST'])
+@login_required
+def delete_address(user_id):
+    allowed_user = Allowed_user.query.get_or_404(user_id)
+    try:
+        if allowed_user.email == current_user.email:
+            return jsonify({'success': False, 'message': 'You cannot delete yourself.'}), 403
+        db.session.delete(allowed_user)
+
+        user = User.query.filter_by(email=allowed_user.email).first()
+        if user:
+            db.session.delete(user)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Address deleted successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500
+    
+def send_signup_email(email):
+    ses_client = boto3.client('ses', region_name='eu-central-1')
+    signup_url = f"http://localhost:5000/signup_page"
+    subject = "Sign Up for Foodbot App"
+    body_text = f"""
+    Hi user,
+
+    You have been added to the list of allowed users for the Foodbot app.
+
+    Please click the link below to sign up and complete your registration:
+
+    {signup_url}
+
+    If you did not request this, please ignore this email.
+
+    Thank you,
+    Your FOODBOT team
+    """
+    body_html = f"""
+    <html>
+    <head></head>
+    <body>
+        <p>Hi user,</p>
+        <p>You have been added to the list of allowed users for the Foodbot app.</p>
+        <p>Please click the link below to sign up and complete your registration:</p>
+        <p><a href="{signup_url}">{signup_url}</a></p>
+        <p>If you did not request this, please ignore this email.</p>
+        <p>Thank you,<br>Your FOODBOT team</p>
+    </body>
+    </html>
+    """
+    try:
+        response = ses_client.send_email(
+            Source='krus.frantisek@gmail.com',
+            Destination={
+                'ToAddresses': [email]
+            },
+            Message={
+                'Subject': {
+                    'Data': subject,
+                    'Charset': 'UTF-8'
+                },
+                'Body': {
+                    'Text': {
+                        'Data': body_text,
+                        'Charset': 'UTF-8'
+                    },
+                    'Html': {
+                        'Data': body_html,
+                        'Charset': 'UTF-8'
+                    }
+                }
+            }
+        )
+        return response
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return None
+    
+@admin_bp.route('/add_address', methods=['GET', 'POST'])
+@login_required
+def add_address():
+    if request.method == 'GET':
+        return render_template('admin/add_address.html')
+
+    if request.method == 'POST':
+        emails = []
+
+        # Check if a file is uploaded
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename.endswith('.csv'):
+                # Read CSV file
+                stream = StringIO(file.stream.read().decode("UTF8"), newline=None)
+                csv_input = csv.reader(stream)
+                for row in csv_input:
+                    emails.extend(row)
+            else:
+                # Read text file
+                emails = re.split(r'[,\n]', file.stream.read().decode("UTF8"))
+
+        elif 'emails' in request.form:
+            emails = re.split(r'[,\n]', request.form['emails'])
+
+        # Remove any leading/trailing whitespace from emails
+        emails = [email.strip() for email in emails]
+
+        email_regex = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+
+        # Filter out invalid email addresses
+        valid_emails = [email for email in emails if email_regex.match(email)]
+
+        # Add emails to Allowed_user table
+        # TODO - make this asynchronous also count the number of emails that were not sended successfully
+        for email in valid_emails:
+            if email:
+                allowed_user = Allowed_user(email=email)
+                db.session.add(allowed_user)
+                send_signup_email(email)
+
+        try:
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Addresses added successfully'}), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'message': str(e)}), 500
