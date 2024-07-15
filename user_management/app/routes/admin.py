@@ -70,6 +70,7 @@ def add_user():
 @login_required
 def edit_user(user_id):
     user = User.query.get_or_404(user_id)
+    allowed_address = Allowed_user.query.filter_by(email = user.email).first()
     if request.method == 'POST':
         data = request.get_json()
         if not data:
@@ -78,6 +79,8 @@ def edit_user(user_id):
         user.name = data.get('name')
         user.role = data.get('role')
         user.email_verified = data.get('email_verified', False)
+        if allowed_address:
+            allowed_addresses.email = data.get('email')
         db.session.commit()
         return jsonify({'status': 'success', 'message': 'User updated successfully'}), 200
     return render_template('admin/edit_user.html', user=user)
@@ -156,6 +159,8 @@ def send_signup_email(email):
 
     You have been added to the list of allowed users for the Foodbot app.
 
+    During registration use this email address otherwise you will not be able to register.
+
     Please click the link below to sign up and complete your registration:
 
     {signup_url}
@@ -171,6 +176,7 @@ def send_signup_email(email):
     <body>
         <p>Hi user,</p>
         <p>You have been added to the list of allowed users for the Foodbot app.</p>
+        <p>During registration use this email address otherwise you will not be able to register.</p>
         <p>Please click the link below to sign up and complete your registration:</p>
         <p><a href="{signup_url}">{signup_url}</a></p>
         <p>If you did not request this, please ignore this email.</p>
@@ -238,17 +244,22 @@ def add_address():
 
         # Filter out invalid email addresses
         valid_emails = [email for email in emails if email_regex.match(email)]
-
+        invalid_counter = 0
+        invalid_addresses = []
         # Add emails to Allowed_user table
-        # TODO - make this asynchronous also count the number of emails that were not sended successfully
         for email in valid_emails:
             if email:
-                allowed_user = Allowed_user(email=email)
-                db.session.add(allowed_user)
-                send_signup_email(email)
+                if not Allowed_user.query.filter_by(email=email).first():
+                    allowed_user = Allowed_user(email=email)
+                    db.session.add(allowed_user)
+                    if send_signup_email(email) is None:
+                        invalid_counter += 1
+                        invalid_addresses.append(email)
 
         try:
             db.session.commit()
+            if invalid_counter > 0:
+                return jsonify({'success': False, 'message': f"""Addresses added successfully. {invalid_counter} emails were not succesfully send to users. These are {[address for address in invalid_addresses]}"""}), 500
             return jsonify({'success': True, 'message': 'Addresses added successfully'}), 200
         except Exception as e:
             db.session.rollback()

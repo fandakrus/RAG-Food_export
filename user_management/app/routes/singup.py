@@ -38,7 +38,7 @@ def send_verification_email(user, token):
         response = ses_client.send_email(
         Source='krus.frantisek@gmail.com',
         Destination={
-            'ToAddresses': ["fanda747@seznam.cz"]
+            'ToAddresses': [user.email]
         },
         Message={
             'Subject': {
