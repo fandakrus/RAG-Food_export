@@ -17,10 +17,12 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     if (response.ok) {
         responseMessage.textContent = result.message;
+        responseMessage.style.display = 'block';
         responseMessage.style.color = 'green';
         window.location.href = result.redirect;
     } else {
         responseMessage.textContent = result.message;
+        responseMessage.style.display = 'block';
         responseMessage.style.color = 'red';
     }
 });

@@ -244,3 +244,9 @@ div a, div button {
 div a:hover, div button:hover {
     background-color: #45a049; /* Darker green on hover */
 }
+
+#responseMessage {
+    margin: 10px;
+    border-radius: 5px;
+    display: none;
+}
