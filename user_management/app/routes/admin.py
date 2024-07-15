@@ -80,7 +80,7 @@ def edit_user(user_id):
         user.role = data.get('role')
         user.email_verified = data.get('email_verified', False)
         if allowed_address:
-            allowed_addresses.email = data.get('email')
+            allowed_address.email = data.get('email')
         db.session.commit()
         return jsonify({'status': 'success', 'message': 'User updated successfully'}), 200
     return render_template('admin/edit_user.html', user=user)
