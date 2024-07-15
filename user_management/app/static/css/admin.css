@@ -1,14 +1,246 @@
-#response-message {
-    display: none;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0 0 60px 0; /* Added bottom padding to account for footer height */
+    color: #333;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    position: relative;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    background-color: #4CAF50; /* Same color as header */
+    overflow: hidden;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    float: left;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    background-color: #66bb6a; /* Light green hover effect */
+}
+
+nav ul li:last-child {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+main {
+    padding: 20px;
+}
+
+.login-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Form Styles */
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px 0; /* Removed auto to align left */
+    display: flex;
+    align-items: center; /* Align items in the center */
+    justify-content: flex-start; /* Align items to the left */
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+form input[type="text"] {
+    width: auto; /* Adjust width to fit content */
+    flex: 1; /* Allow input to take available space */
+    padding: 10px;
+    margin-right: 10px; /* Add margin to separate from button */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form input[type="password"],
+form textarea {
+    width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
+    border-radius: 5px;
 }
-#response-message.success {
-    border-color: green;
-    color: green;
+
+form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
 }
-#response-message.error {
-    border-color: red;
-    color: red;
+
+form button:hover {
+    background-color: #45a049;
+}
+
+/* login form */
+
+.login-main {
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 20px !important;
+}
+
+.login-form {
+    background-color: white !important;
+    padding: 20px !important;
+    border-radius: 5px !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+    max-width: 400px !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.login-label {
+    margin-bottom: 5px !important;
+}
+
+.login-input {
+    width: 100% !important;
+    padding: 10px !important;
+    margin-bottom: 10px !important;
+    margin-right: 0 !important;
+    border: 1px solid #ccc !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important; /* Ensure padding and border are included in the width */
+}
+
+.login-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center !important;
+}
+
+.login-button:hover {
+    background-color: #45a049;
+}
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #ddd;
+}
+
+/* Action Button Styles */
+table td button {
+    background-color: #e0e0e0; /* Light grey color for less significant buttons */
+    color: #333;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+table td button:hover {
+    background-color: #bdbdbd; /* Darker grey on hover */
+}
+
+/* Pagination Styles */
+.pagination a {
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #45a049;
+}
+
+/* Link and Button at the Bottom Styles */
+div a, div button {
+    display: inline-block;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+
+div a:hover, div button:hover {
+    background-color: #45a049; /* Darker green on hover */
 }

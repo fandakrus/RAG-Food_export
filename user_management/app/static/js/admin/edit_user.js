@@ -21,17 +21,24 @@ document.getElementById('edit-user-form').addEventListener('submit', function(ev
     .then(response => response.json())
     .then(data => {
         const responseMessage = document.getElementById('response-message');
+        const responseText = document.getElementById('response-text');
         if (data.status === 'success') {
-            responseMessage.textContent = data.message;
+            responseText.textContent = data.message;
             responseMessage.style.color = 'green';
-            responseMessage.style.display = 'block';
+            responseMessage.style.backgroundColor = 'lightgreen';
+            responseMessage.style.display = 'flex';
         } else {
-            responseMessage.textContent = data.message;
+            responseText.textContent = data.message;
             responseMessage.style.color = 'red';
-            responseMessage.style.display = 'block';
+            responseMessage.style.backgroundColor = 'lightred';
+            responseMessage.style.display = 'flex';
         }
     })
     .catch(error => {
         console.error('Error:', error);
     });
 });
+
+function closeResponseMessage() {
+    document.getElementById('response-message').style.display = 'none';
+}

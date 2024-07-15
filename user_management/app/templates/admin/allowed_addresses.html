@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin - Users</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
 <body>
     <header>
@@ -19,7 +19,7 @@
     </header>
     <main>
         <section>
-            <h2>Users</h2>
+            <h2>Allowed addresses</h2>
             <form method="get" action="{{ url_for('admin.admin_users') }}">
                 <input type="text" name="search" placeholder="Search by email" value="{{ search_query }}">
                 <button type="submit">Search</button>

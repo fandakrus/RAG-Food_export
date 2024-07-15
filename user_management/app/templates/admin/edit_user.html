@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit User</title>
-    <style src="{{ url_for('static', filename='css/admin.css') }}"></style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_modules.css') }}">
 </head>
 <body>
-    <div id="response-message"></div>
+    <div id="response-message">
+        <span id="response-text"></span>
+        <button id="close-response-message" onclick="closeResponseMessage()">X</button>
+    </div>
     <h1>Edit User</h1>
     <form id="edit-user-form">
         <label for="name">Name:</label>

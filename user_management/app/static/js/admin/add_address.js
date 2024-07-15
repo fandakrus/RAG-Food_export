@@ -4,17 +4,18 @@ async function submitForm(event) {
 
     const fileInput = document.getElementById('file');
     const emailsInput = document.getElementById('emails');
-    const responseMessage = document.getElementById('responseMessage');
-
-    // Clear previous response message
-    responseMessage.innerHTML = '';
+    const responseMessage = document.getElementById('response-message');
+    const responseText = document.getElementById('response-text');
 
     if (fileInput.files.length > 0) {
         formData.append('file', fileInput.files[0]);
     } else if (emailsInput.value.trim() !== '') {
         formData.append('emails', emailsInput.value.trim());
     } else {
-        responseMessage.innerHTML = '<p style="color: red;">Please provide a file or email addresses.</p>';
+        responseText.textContent = "Please select a file or enter email addresses";
+        responseMessage.style.color = 'red';
+        responseMessage.style.backgroundColor = 'pink';
+        responseMessage.style.display = 'flex';
         return;
     }
 
@@ -24,13 +25,26 @@ async function submitForm(event) {
             body: formData
         });
 
-        const result = await response.json();
-        if (result.success) {
-            responseMessage.innerHTML = '<p style="color: green;">' + result.message + '</p>';
+        const data = await response.json();
+        if (data.success) {
+            responseText.textContent = data.message;
+            responseMessage.style.color = 'green';
+            responseMessage.style.backgroundColor = 'lightgreen';
+            responseMessage.style.display = 'flex';
         } else {
-            responseMessage.innerHTML = '<p style="color: red;">Error: ' + result.message + '</p>';
+            responseText.textContent = data.message;
+            responseMessage.style.color = 'red';
+            responseMessage.style.backgroundColor = 'pink';
+            responseMessage.style.display = 'flex';
         }
     } catch (error) {
-        responseMessage.innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+        responseText.textContent = error.message;
+        responseMessage.style.color = 'red';
+        responseMessage.style.backgroundColor = 'pink';
+        responseMessage.style.display = 'flex';
     }
+}
+
+function closeResponseMessage() {
+    document.getElementById('response-message').style.display = 'none';
 }

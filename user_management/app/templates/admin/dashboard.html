@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
 <body>
     <header>
@@ -26,9 +26,9 @@
             <h2>Statistics</h2>
             <p>Number of users: {{ user_count }}</p>
         </section>
-        <section>
-            <a href="{{ url_for('admin.allowed_addresses') }}">Add more users</a>
-        </section>
+        <div>
+            <a href="{{ url_for('admin.add_address') }}">Add more users</a>
+        </div>
     </main>
     <footer>
         <p>&copy; 2024 Your Company</p>
