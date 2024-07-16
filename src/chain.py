@@ -28,18 +28,21 @@ def load_keys():
     Load the API keys from the .env file although to load authentication keys tool/load_env.py should be used
     GOOGLE - for gemini access
     HUGGING_FACE - for huggingface access to embeddings but I don't think it's necessary here
+    LITERAL - needed so history is enabled with password and also metrics
     """
     load_dotenv()
     gemini_key = os.getenv("GOOGLE_API_KEY")
     hf_token = os.getenv("HUGGING_FACE_TOKEN")
+    literal_api_key = os.getenv("LITERAL_API_KEY")
     os.environ['GOOGLE_API_KEY'] = gemini_key
     os.environ['HF_TOKEN'] = hf_token
+    os.environ['LITERAL_API_KEY'] = literal_api_key
 
 def load_db():
     """
     Load the FAISS database from the local file
     """
-    embeddings = HuggingFaceEmbeddings(model_name="Alibaba-NLP/gte-large-en-v1.5",
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
                                        model_kwargs={'device': 'cpu', 'trust_remote_code': True})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
     return db
@@ -47,7 +50,7 @@ def load_db():
 load_keys()
 # preparation of model and retriever I hope chain lint run this at server start and the Fiass is loaded once
 llm = ChatGoogleGenerativeAI(model='gemini-1.5-flash')
-retriever = load_db().as_retriever()
+retriever = load_db().as_retriever(search_kwargs={'k': 15})
 
 def write_conversation_to_file(conversation):
     # export the conversation to a text file based named based on the first question
@@ -79,7 +82,8 @@ template = """You are an expert in food safety for importing food from Thailand 
 <context>
 {context}
 </context>
-if you don't know the answer give as much relative information as possible and say you don't know."""
+if you don't know the answer give as much relative information as possible and say you don't know.
+Do not mention provided context, act as assistant expert in the field."""
 ANSWER_PROMPT = ChatPromptTemplate.from_messages(
     [
         ("system", template),
