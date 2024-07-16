@@ -59,7 +59,7 @@ async def start():
     msg = cl.Message(content="Starting the bot...")
     history = []
     await msg.send()
-    msg.content = "Hi, Welcome to Food safety Bot. What is your query?"
+    msg.content = "Hi, Welcome to Food safety Bot. Please ask as specific question as possible. Also please note that all the information provided here don't have to be always correct."
     await msg.update()
     cl.user_session.set("history", history)
     cl.user_session.set("chain", chain)

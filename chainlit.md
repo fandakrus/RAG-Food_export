@@ -1,14 +1,3 @@
-# Welcome to Chainlit! 🚀🤖
-
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
-
-## Useful Links 🔗
-
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
-
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
-
-## Welcome screen
-
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
+# FOOD SAFETY BOT
+Hello, welcome to our food safety bot. This bot should give information and advices about food import from Thailand to USA. Try to always provide as much information as possible for the bot. Usage of correct names and abreviation in English is necessary.
+## !!! Please be noted that all information provided by the chatbot don't have to be correct and we don't carry legal consequences of its opinion !!!
