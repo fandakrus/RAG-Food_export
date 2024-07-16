@@ -3,6 +3,7 @@ from .. import db, bcrypt
 from ..models import User, Allowed_user, EmailVerificationToken
 import uuid
 import boto3
+import re
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -70,14 +71,22 @@ def signup():
     name = data.get('name')
     password = data.get('password')
 
+    email_regex = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+
     if not email or not name or not password:
         return jsonify({'success': False, 'message': 'All fields are required'}), 400
+    
+    if not email_regex.match(email):
+        return jsonify({'success': False, 'message': 'Invalid email format'}), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({'success': False, 'message': 'User with this email address already exists'}), 400
 
     if not Allowed_user.query.filter_by(email=email).first():
         return jsonify({'success': False, 'message': 'This email is not allowed to sign up'}), 400
+    
+    if len(password) < 8:
+        return jsonify({'success': False, 'message': 'Password must be at least 8 characters long'}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     new_user = User(email=email, name=name, password=hashed_password)
