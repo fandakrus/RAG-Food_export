@@ -30,7 +30,7 @@ document.getElementById('edit-user-form').addEventListener('submit', function(ev
         } else {
             responseText.textContent = data.message;
             responseMessage.style.color = 'red';
-            responseMessage.style.backgroundColor = 'lightred';
+            responseMessage.style.backgroundColor = 'pink';
             responseMessage.style.display = 'flex';
         }
     })
