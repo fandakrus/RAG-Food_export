@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from .. import db
 from ..models import EmailVerificationToken, User
 
@@ -6,7 +6,8 @@ page_bp = Blueprint('signup_page', __name__)
 
 @page_bp.route('/signup_page', methods=['GET'])
 def signup_page():
-    return render_template('signup.html')
+    email = request.args.get('email', '')
+    return render_template('signup.html', email=email)
 
 @page_bp.route('/email_verify_page', methods=['GET'])
 def email_verify_page():

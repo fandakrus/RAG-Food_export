@@ -152,7 +152,7 @@ def delete_address(user_id):
     
 def send_signup_email(email):
     ses_client = boto3.client('ses', region_name='eu-central-1')
-    signup_url = f"http://localhost:5000/signup_page"
+    signup_url = f"http://localhost:5000/signup_page?email={email}"
     subject = "Sign Up for Foodbot App"
     body_text = f"""
     Hi user,
