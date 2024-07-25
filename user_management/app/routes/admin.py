@@ -25,7 +25,7 @@ def login():
             password = request.form['password']
 
         user = User.query.filter_by(email=email).first()
-        if user and bcrypt.check_password_hash(user.password.encode('utf-8'), password.encode('utf-8')) and user.role == "admin":
+        if user and bcrypt.check_password_hash(user.password, password.encode('utf-8')) and user.role == "admin":
             login_user(user)
             return jsonify({'message': 'Login successful', 'redirect': url_for('admin.admin_dashboard')}), 200
         else:
