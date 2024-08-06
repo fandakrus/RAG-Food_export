@@ -3,26 +3,28 @@ function editUser(userId) {
 }
 
 function deleteUser(userId) {
-    fetch(`/admin/delete_user/${userId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token() }}'
-        }
-    })
-    .then(response => response.text())
-    .then(text => {
-        return JSON.parse(text);
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            alert(data.message);
-            location.reload();
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => console.error('Error:', error));
+    if (confirm("Are you sure you want to delete this user?")) {
+        fetch(`/admin/delete_user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.text())
+        .then(text => {
+            return JSON.parse(text);
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
 }
 
 function changePassword(userId) {
