@@ -2,6 +2,7 @@ import os
 from typing import Dict, Optional
 import sqlite3
 import bcrypt
+from time import sleep
 
 import chainlit as cl
 from src.chain import chain, write_conversation_to_file
@@ -56,6 +57,7 @@ async def start():
     History is for storing content of the conversation.
     Chain is in this code presistently set for each usersession.
     """
+    sleep(0.3)
     msg = cl.Message(content="Starting the bot...")
     history = []
     await msg.send()

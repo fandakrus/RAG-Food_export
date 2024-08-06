@@ -6,3 +6,5 @@ cd RAG-Food_export/
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+pip install gunicorn
+sudo apt install nginx
