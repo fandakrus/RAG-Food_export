@@ -1,7 +1,7 @@
 """This is for creating the embeding store based on the documents in the data folder
 If not run on good GPU running google colab on TPU device is faster"""
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
+from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader, CSVLoader
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
@@ -24,9 +24,13 @@ def create_texts():
             text.page_content = text.page_content[:-len("PUBLIC VERSION")].rstrip()
     return texts
 
+def create_table_texts():
+    loader = CSVLoader(DATA_PATH + "participant_list.csv")
+    documents = loader.load()
+    return documents
 
 def create_vector_db():
-    texts = create_texts()
+    texts = create_texts() + create_table_texts()
     embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2', model_kwargs={'device': 'cpu', 'token': HG_TOKEN, "trust_remote_code": True})
     db = FAISS.from_documents(texts, embeddings)
     db.save_local(DB_FAISS_PATH)
