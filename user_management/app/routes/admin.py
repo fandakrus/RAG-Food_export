@@ -2,9 +2,10 @@ import csv
 from io import StringIO
 import re
 import boto3
+import uuid
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from ..models import User, Allowed_user
+from ..models import User, Allowed_user, PasswordChangeToken
 from .. import login_manager, db, bcrypt
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -264,3 +265,84 @@ def add_address():
         except Exception as e:
             db.session.rollback()
             return jsonify({'success': False, 'message': str(e)}), 500
+        
+def send_password_reset_email(user, token):
+    ses_client = boto3.client('ses', region_name='eu-central-1')
+    verification_link = f"http://localhost:5000/reset_password/{token}"
+    subject = "Reset Your Password"
+    body_text = f"""
+    Hi {user.name},
+
+    Please click the link below to reset your password:
+
+    {verification_link}
+
+    If you did not request this, please ignore this email.
+
+    Thank you,
+    Your FOODBOT team
+    """
+    body_html = f"""
+    <html>
+    <head></head>
+    <body>
+        <p>Hi {user.name},</p>
+        <p>Please click the link below to reset your password:</p>
+        <p><a href="{verification_link}">{verification_link}</a></p>
+        <p>If you did not request this, please ignore this email.</p>
+        <p>Thank you,<br>Your FOODBOT team</p>
+    </body>
+    </html>
+    """
+    try:
+        response = ses_client.send_email(
+        Source='krus.frantisek@gmail.com',
+        Destination={
+            'ToAddresses': [user.email]
+        },
+        Message={
+            'Subject': {
+                'Data': subject,
+                'Charset': 'UTF-8'
+            },
+            'Body': {
+                'Text': {
+                    'Data': body_text,
+                    'Charset': 'UTF-8'
+                },
+                'Html': {
+                    'Data': body_html,
+                    'Charset': 'UTF-8'
+                }
+            }
+        }
+    )   
+        print(response)
+        return True
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
+
+def add_password_reset_token_to_db(token):
+    try:
+        db.session.add(token)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(f"Error adding verification token to the database: {e}")
+        return False
+
+@admin_bp.route('/reset_password/<int:user_id>', methods=['POST'])
+@login_required
+def reset_password(user_id):
+    user = User.query.get_or_404(user_id)
+    token = str(uuid.uuid4())
+    verification_token = PasswordChangeToken(user_id=user.id, token=token)
+
+    if not add_password_reset_token_to_db(verification_token):
+        return jsonify({'success': False, 'message': 'Unexpected error occurred'}), 500
+    
+    if not send_password_reset_email(user, token):
+        return jsonify({'success': False, 'message': 'Failed to send password email'}), 500
+    
+    return jsonify({'success': True, 'message': 'Email with instructions send to the user'}), 201
