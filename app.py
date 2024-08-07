@@ -25,7 +25,7 @@ def auth_callback(email: str, password: str):
     cursor = conn.cursor()
 
     try:
-        cursor.execute("SELECT email, password, role, email_verified FROM user WHERE email = ?", (email,))
+        cursor.execute("SELECT email, password, role, email_verified FROM user WHERE email = ?", (email.lower(),))
         user = cursor.fetchone()
 
         if user is None:

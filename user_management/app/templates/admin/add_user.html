@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_modules.css') }}">
+</head>
+<body>
+    <div id="response-message">
+        <span id="response-text"></span>
+        <button id="close-response-message" onclick="closeResponseMessage()">X</button>
+    </div>
+    <h1>Add User</h1>
+    <form id="add-user-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        
+        <label for="role">Role:</label>
+        <select id="role" name="role" required>
+            <option value="user" selected>User</option>
+            <option value="admin">Admin</option>
+        </select>
+        <br>
+
+        <label for="role">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+
+        <label for="role">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+        <br>
+        
+        <label for="email_verified">Email Verified:</label>
+        <input type="checkbox" id="email_verified" name="email_verified">
+        <br>
+        
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{{ url_for('admin.admin_users') }}">Back to Users List</a>
+    <script src="{{ url_for('static', filename='js/admin/add_user.js') }}"></script>
+</body>
+</html>

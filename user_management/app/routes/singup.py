@@ -67,7 +67,7 @@ def send_verification_email(user, token):
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-    email = data.get('email')
+    email = data.get('email').lower()
     name = data.get('name')
     password = data.get('password')
 

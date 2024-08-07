@@ -59,12 +59,58 @@ def admin_users():
     users = pagination.items
     return render_template('admin/users.html', users=users, pagination=pagination, search_query=search_query)
 
+def add_user_to_db(user):
+    try:
+        db.session.add(user)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(f"Error adding user to the database: {e}")
+        return False
+
 @admin_bp.route('/add_user', methods=['GET', 'POST'])
 @login_required
 def add_user():
     if request.method == 'POST':
-        # Logic to add user
-        return redirect(url_for('admin.admin_users'))
+        data = request.get_json()
+        if not data:
+            return jsonify({'status': 'error', 'message': 'Invalid JSON data'}), 400
+        email = data.get('email').lower()
+        name = data.get('name')
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
+        role = data.get('role')
+        email_verified = data.get('email_verified', False)
+        email_regex = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+
+        if not email or not name or not password or not confirm_password:
+            return jsonify({'status': 'error', 'message': 'All fields are required'}), 400
+        
+        if not email_regex.match(email):
+            return jsonify({'status': 'error', 'message': 'Invalid email format'}), 400
+        
+        if User.query.filter_by(email=email).first():
+            return jsonify({'status': 'error', 'message': 'User with this email address already exists'}), 400
+        
+        if len(password) < 8:
+            return jsonify({'status': 'error', 'message': 'Password must be at least 8 characters long'}), 400
+
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user = User(email=email, name=name, password=hashed_password, role=role, email_verified=email_verified)
+
+        if not add_user_to_db(new_user):
+            return jsonify({'success': False, 'message': 'Unexpected error occurred'}), 500
+        
+        if not Allowed_user.query.filter_by(email=email).first():
+            allowed_user = Allowed_user(email=email)
+            try:
+                db.session.add(allowed_user)
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                return jsonify({'success': False, 'message': str(e)}), 500
+        
+        return jsonify({'status': 'success', 'message': 'User added successfully'}), 201
     return render_template('admin/add_user.html')
 
 @admin_bp.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
@@ -112,7 +158,7 @@ def change_password(user_id):
         if new_password != confirm_password:
             return jsonify({'status': 'error', 'message': 'Passwords do not match!'}), 400
         
-        user.password = bcrypt.generate_password_hash(new_password)
+        user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
         db.session.commit()
         return jsonify({'status': 'success', 'message': 'Password changed successfully'}), 200
     
@@ -244,7 +290,7 @@ def add_address():
         email_regex = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
         # Filter out invalid email addresses
-        valid_emails = [email for email in emails if email_regex.match(email)]
+        valid_emails = [email.lower() for email in emails if email_regex.match(email)]
         invalid_counter = 0
         invalid_addresses = []
         # Add emails to Allowed_user table
