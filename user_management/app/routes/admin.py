@@ -314,7 +314,7 @@ def add_address():
         
 def send_password_reset_email(user, token):
     ses_client = boto3.client('ses', region_name='eu-central-1')
-    verification_link = f"http://localhost:5000/reset_password/{token}"
+    verification_link = f"http://localhost:5000/reset_password_page/{token}"
     subject = "Reset Your Password"
     body_text = f"""
     Hi {user.name},
