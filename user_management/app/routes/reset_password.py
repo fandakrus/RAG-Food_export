@@ -14,10 +14,23 @@ def verify_token(token):
 
     return user
 
+def remove_token(token):
+    password_change_token = PasswordChangeToken.query.filter_by(token=token).first()
+
+    if not password_change_token:
+        return None
+
+    try:
+        db.session.delete(password_change_token)
+        db.session.commit()
+    except Exception as e:
+        print(f"Error removing token: {e}")
+        return None
+    return True
+
 @reset_password_bp.route('/reset_password_page/<token>', methods=['GET'])
 def reset_password_page(token):
     user = verify_token(token)
-    print(not user)
     if not user:
         return render_template('reset_password_invalid_token.html')
     return render_template('reset_password.html', token=token)
@@ -41,7 +54,7 @@ def reset_password():
     except Exception as e:
         print(f"Error resetting password: {e}")
         return jsonify({'error': False, 'message': 'Unexpected error occurred'}), 500
-
+    remove_token(token)
     return jsonify({'success': True, 'message': 'Password reset successfully'}), 200
 
 @reset_password_bp.route('/password_reset_success', methods=['GET'])

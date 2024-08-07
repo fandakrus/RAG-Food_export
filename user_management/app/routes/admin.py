@@ -122,6 +122,8 @@ def edit_user(user_id):
         data = request.get_json()
         if not data:
             return jsonify({'status': 'error', 'message': 'Invalid JSON data'}), 400
+        if user.id == current_user.id and data.get('role') != 'admin':
+            return jsonify({'status': 'error', 'message': 'You cannot demote yourself!'}), 400
         user.email = data.get('email')
         user.name = data.get('name')
         user.role = data.get('role')
