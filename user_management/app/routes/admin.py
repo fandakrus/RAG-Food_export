@@ -202,11 +202,11 @@ def delete_address(user_id):
 def send_signup_email(email):
     ses_client = boto3.client('ses', region_name='ap-southeast-1')
     signup_url = f"https://foodprobot.com/signup_page?email={email}"
-    subject = "Sign Up for Foodpro bot App"
+    subject = "Sign Up for Foodpro chatbot App"
     body_text = f"""
     Hi user,
 
-    You have been added to the list of allowed users for the Foodpro bot app.
+    You have been added to the list of allowed users for the Foodpro chatbot app.
 
     During registration use this email address otherwise you will not be able to register.
 
