@@ -200,19 +200,20 @@ def delete_address(user_id):
         return jsonify({'success': False, 'message': str(e)}), 500
     
 def send_signup_email(email):
-    ses_client = boto3.client('ses', region_name='eu-central-1')
-    signup_url = f"http://localhost:5000/signup_page?email={email}"
-    subject = "Sign Up for Foodbot App"
+    ses_client = boto3.client('ses', region_name='ap-southeast-1')
+    signup_url = f"https://foodprobot.com/signup_page?email={email}"
+    subject = "Sign Up for Foodpro bot App"
     body_text = f"""
     Hi user,
 
-    You have been added to the list of allowed users for the Foodbot app.
+    You have been added to the list of allowed users for the Foodpro bot app.
 
     During registration use this email address otherwise you will not be able to register.
 
     Please click the link below to sign up and complete your registration:
 
     {signup_url}
+
 
     If you did not request this, please ignore this email.
 
@@ -235,7 +236,7 @@ def send_signup_email(email):
     """
     try:
         response = ses_client.send_email(
-            Source='krus.frantisek@gmail.com',
+            Source='register@foodprobot.com',
             Destination={
                 'ToAddresses': [email]
             },
@@ -315,8 +316,8 @@ def add_address():
             return jsonify({'success': False, 'message': str(e)}), 500
         
 def send_password_reset_email(user, token):
-    ses_client = boto3.client('ses', region_name='eu-central-1')
-    verification_link = f"http://localhost:5000/reset_password_page/{token}"
+    ses_client = boto3.client('ses', region_name='ap-southeast-1')
+    verification_link = f"https://foodprobot.com/reset_password_page/{token}"
     subject = "Reset Your Password"
     body_text = f"""
     Hi {user.name},
@@ -344,7 +345,7 @@ def send_password_reset_email(user, token):
     """
     try:
         response = ses_client.send_email(
-        Source='krus.frantisek@gmail.com',
+        Source='noreply@foodprobot.com',
         Destination={
             'ToAddresses': [user.email]
         },

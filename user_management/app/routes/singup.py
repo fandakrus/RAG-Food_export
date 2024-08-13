@@ -8,8 +8,8 @@ import re
 auth_bp = Blueprint('auth', __name__)
 
 def send_verification_email(user, token):
-    ses_client = boto3.client('ses', region_name='eu-central-1')
-    verification_link = f"http://localhost:5000/verify_email/{token}"
+    ses_client = boto3.client('ses', region_name='ap-southeast-1')
+    verification_link = f"https://foodprobot.com/verify_email/{token}"
     subject = "Verify your email address"
     body_text = f"""
     Hi {user.name},
@@ -37,7 +37,7 @@ def send_verification_email(user, token):
     """
     try:
         response = ses_client.send_email(
-        Source='krus.frantisek@gmail.com',
+        Source='noreply@foodprobot.com',
         Destination={
             'ToAddresses': [user.email]
         },
