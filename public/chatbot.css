@@ -5,3 +5,7 @@
     max-width: 280px !important;
     border-radius: 8px !important;
 }
+
+.watermark {
+    display: none !important;
+}
