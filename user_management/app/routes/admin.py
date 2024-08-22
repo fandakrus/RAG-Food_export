@@ -1,14 +1,33 @@
 import csv
-from io import StringIO
+import pandas as pd
+from io import StringIO, BytesIO
 import re
 import boto3
 import uuid
+from itertools import zip_longest
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from ..models import User, Allowed_user, PasswordChangeToken
 from .. import login_manager, db, bcrypt
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+
+class UserEmail:
+    def __init__(self, email, first_name=None, last_name=None, organization=None):
+        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        self.organization = organization
+
+    def generate_greating(self):
+        if self.first_name and self.last_name:
+            return f"Hello {self.first_name} {self.last_name}" + (f", {self.organization}" if self.organization else "")
+        if self.first_name:
+            return f"Hello {self.first_name}" + (f", {self.organization}" if self.organization else "")
+        if self.last_name:
+            return f"Hello {self.last_name}" + (f", {self.organization}" if self.organization else "")
+        return "Hello User"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -199,12 +218,13 @@ def delete_address(user_id):
         db.session.rollback()
         return jsonify({'success': False, 'message': str(e)}), 500
     
-def send_signup_email(email):
+def send_signup_email(email: UserEmail):
     ses_client = boto3.client('ses', region_name='ap-southeast-1')
-    signup_url = f"https://foodprobot.com/signup_page?email={email}"
+    signup_url = f"https://foodprobot.com/signup_page?email={email.email}"
     subject = "Sign Up for Foodpro chatbot App"
+    greating = email.generate_greating()
     body_text = f"""
-    Hi user,
+    {greating},
 
     You have been added to the list of allowed users for the Foodpro chatbot app.
 
@@ -224,7 +244,7 @@ def send_signup_email(email):
     <html>
     <head></head>
     <body>
-        <p>Hi user,</p>
+        <p>{greating},</p>
         <p>You have been added to the list of allowed users for the Foodbot app.</p>
         <p>During registration use this email address otherwise you will not be able to register.</p>
         <p>Please click the link below to sign up and complete your registration:</p>
@@ -238,7 +258,7 @@ def send_signup_email(email):
         response = ses_client.send_email(
             Source='register@foodprobot.com',
             Destination={
-                'ToAddresses': [email]
+                'ToAddresses': [email.email]
             },
             Message={
                 'Subject': {
@@ -269,42 +289,56 @@ def add_address():
         return render_template('admin/add_address.html')
 
     if request.method == 'POST':
-        emails = []
+        user_emails = []
 
         # Check if a file is uploaded
         if 'file' in request.files:
             file = request.files['file']
-            if file.filename.endswith('.csv'):
+            if file.filename.endswith('.xlsx'):
+                file_stream = BytesIO(file.stream.read())
+                # Read Excel file
+                df = pd.read_excel(file_stream)
+                df.columns = df.columns.str.lower()
+                try:
+                    emails = df['email'].tolist()
+
+                    if 'first name' in df.columns:
+                        first_names = df['first name'].tolist()
+                    if 'last name' in df.columns:
+                        last_names = df['last name'].tolist()
+                    if 'organization' in df.columns:
+                        organizations = df['organization'].tolist()
+                except KeyError:
+                    return jsonify({'success': False, 'message': 'Excel file must have a column named "email"'}), 400
+                for email, first_name, last_name, organization in zip_longest(emails, first_names, last_names, organizations, fillvalue=None):
+                    user_emails.append(UserEmail(email, first_name, last_name, organization))
+
+            elif file.filename.endswith('.csv'):
                 # Read CSV file
                 stream = StringIO(file.stream.read().decode("UTF8"), newline=None)
                 csv_input = csv.reader(stream)
-                for row in csv_input:
-                    emails.extend(row)
+                user_emails = [UserEmail(email.strip()) for row in csv_input for email in row]              
             else:
                 # Read text file
-                emails = re.split(r'[,\n]', file.stream.read().decode("UTF8"))
+                user_emails = [UserEmail(email.strip()) for email in re.split(r'[,\n]', file.stream.read().decode("UTF8"))]
 
         elif 'emails' in request.form:
-            emails = re.split(r'[,\n]', request.form['emails'])
-
-        # Remove any leading/trailing whitespace from emails
-        emails = [email.strip() for email in emails]
+            user_emails = [UserEmail(email.strip()) for email in re.split(r'[,\n]', request.form['emails'])]
 
         email_regex = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
         # Filter out invalid email addresses
-        valid_emails = [email.lower() for email in emails if email_regex.match(email)]
+        valid_emails = [user_email for user_email in user_emails if email_regex.match(user_email.email)]
         invalid_counter = 0
         invalid_addresses = []
         # Add emails to Allowed_user table
         for email in valid_emails:
-            if email:
-                if not Allowed_user.query.filter_by(email=email).first():
-                    allowed_user = Allowed_user(email=email)
-                    db.session.add(allowed_user)
-                    if send_signup_email(email) is None:
-                        invalid_counter += 1
-                        invalid_addresses.append(email)
+            if not Allowed_user.query.filter_by(email=email.email).first():
+                allowed_user = Allowed_user(email=email.email)
+                db.session.add(allowed_user)
+                if send_signup_email(email) is None:
+                    invalid_counter += 1
+                    invalid_addresses.append(email.email)
 
         try:
             db.session.commit()
