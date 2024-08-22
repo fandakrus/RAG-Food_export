@@ -30,6 +30,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Sign up date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -39,6 +40,7 @@
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.role }}</td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
                         <td>
                             <button onclick="editUser('{{ user.id }}')">Edit</button>
                             <button onclick="deleteUser('{{ user.id }}')">Delete</button>
