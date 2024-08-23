@@ -14,7 +14,7 @@ def create_texts():
                              glob='*.pdf',
                              loader_cls=PyPDFLoader)
     documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=64)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=1600)
     texts = text_splitter.split_documents(documents)
     for text in texts:
         text.page_content = text.page_content.replace('\t', ' ').replace('\n', ' ')

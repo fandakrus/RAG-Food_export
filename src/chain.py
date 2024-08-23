@@ -50,7 +50,7 @@ def load_db():
 load_keys()
 # preparation of model and retriever I hope chain lint run this at server start and the Fiass is loaded once
 llm = ChatGoogleGenerativeAI(model='gemini-1.5-flash')
-retriever = load_db().as_retriever(search_kwargs={'k': 15})
+retriever = load_db().as_retriever(search_kwargs={'k': 30})
 
 def write_conversation_to_file(conversation):
     # export the conversation to a text file based named based on the first question
