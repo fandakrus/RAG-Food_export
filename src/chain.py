@@ -77,7 +77,7 @@ Standalone question:"""  # noqa: E501
 CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(_template)
 
 # RAG answer synthesis prompt - this one is the most important - change for prompt engineering
-template = """You are an expert in food safety for importing food from Thailand to the United States.
+template = """You are an expert in food safety for exporting food from Thailand to the United States.
             Answer the following question based on the context provided:
 <context>
 {context}
