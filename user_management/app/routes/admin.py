@@ -224,31 +224,31 @@ def send_signup_email(email: UserEmail):
     subject = "Sign Up for Foodpro chatbot App"
     greating = email.generate_greating()
     body_text = f"""
-    สวัสดี {greating},
+    สวัสดีครับ คุณ {greating},
+    ผม ดร.เจษฎา ทิพย์มณเฑียร หัวหน้าวิทยการ หลักสูตร FSPCA Preventive Controls for Human Food (PCQI for Human Food) หลักสูตร FSPCA Preventive Controls for Animal Food (PCQI for Animal Food) หลักสูตร FSPCA Foreign Supplier Verification Programs (FSVP) หลักสูตร FSPCA Intentional Adulteration Conducting Vulnerability Assessments (IAVA)   รวมทั้งวิทยากรและที่ปรึกษาเกี่ยวกับกฎหมายหมาย ระเบียบและการปฏิบัติการที่เป็นเลิศเหนือมาตรฐานเพื่อการส่งออกอาหารไป
+    สหรัฐอเมริกา (ดูประวัติเพิ่มเติมได้ที่ https://beyondstandards.com/jedsada/ )  ผมส่งข้อความนี้มาเพื่อเชิญท่านเข้าใช้แอพพลิเคชั่น FOODPRO BOT 
+
+    FOODPRO BOT เป็นแอพพลิเคชั่น ช่วยให้ท่านเหมือนมีที่ปรึกษาส่วนตัวให้คำแนะนำเรื่องกฎระเบียบเพื่อส่งออกอาหารไปอเมริกา แหล่งข้อมูลอ้างอิงส่วนใหญ่มาจากกฎหมาย ระเบียบและประกาศจากสำนักงานคณะกรรมการอาหารและยาสหรัฐอเมริกาซึ่งเป็นภาษาอังกฤษ ท่านสามารถตั้งคำถามเป็นภาษาไทยได้ แต่การตั้งคำถามที่มีความเฉพาะเจาะจงที่เป็นภาษาอังกฤษจะช่วยให้ท่านได้คำตอบที่ถูกต้องและรวดเร็วขึ้น
+
+    เพื่อรักษาสิทธิการเข้าใช้แอพพลิเคชั่น แบบไม่มีค่าใช้จ่าย โปรดลงทะเบียน {signup_url} foodprobot ภายใน 31 สิงหาคม 2567 เวลา 24.00 น.
+    ผมหวังว่า แอพพลิเคชั่น FOODPROBOT จะช่วยแนะนำข้อมูลที่เป็นประโยชน์ให้กับท่าน อย่างไรก็ตาม โปรดทราบว่าข้อมูลที่ได้รับจะเป็นอธิบายให้คำตอบเพื่อให้แนวคิดในการกำหนดแนวทางปฏิบัติได้ แต่อาจไม่ได้รับประกันความสมบูรณ์ของคำตอบ 100% ขึ้นอยู่กับรายละเอียดผลิตภัณฑ์และบริบททางธุรกิจเพิ่มเติม ท่านต้องดูรายละเอียดข้อกำหนดทางกฎหมายประกอบให้ชัดเจนหรือปรึกษาผู้เชี่ยวชาญเพิ่มเติมก่อนนำคำตอบไปใช้  ต้องการแนะนำ เสนอแนะติดต่อที่ ดร.เจษฎา ทิพย์มณเฑียร LINE ID:@jedsada 
 
 
-    ผม ดร.เจษฎา ทิพย์มณเฑียร Lead Instructor หลักสูตร FSPCA Preventive Controls for Human Food  (PCQI for Human Food) หลักสูตร FSPCA Preventive Controls for Animal Food  (PCQI for Animal Food) หลักสูตร FSPCA Foreign Supplier Verification Programs (FSVP) หลักสูตร FSPCA Intentional Adulteration Conducting Vulnerability Assessments (IAVA)    ส่งข้อความนี้มาเพื่อเชิญท่านเข้าใช้แอพพลิเคชั่น Foodprobot
 
-    Foodprobot เป็น แอพพลิเคชั่น ช่วยให้ท่านมีที่ปรึกษาส่วนตัวเรื่องกฎระเบียบเพื่อส่งออกอาหารไปอเมริกา เพื่อสิทธิการเข้าใช้แอพพลิเคชั่น แบบไม่มีค่าใช้จ่าย โปรดลงทะเบียน {signup_url} เพื่อเริ่มใช้ foodprobot   ภายใน  31 สิงหาคม 2567 เวลา 24.00 น.  
+    Dear {greating},
 
-    หวังเป็นอย่างยิงว่า เป็น แอพพลิเคชั่น จะช่วยแนะนำข้อมูลที่เป็นประโยชน์ให้กับท่าน อย่างไรก็ตาม โปรดทราบว่าข้อมูลทีได้รับอาจไมjได้ถูกต้องสมบูรณ์ 100% กำนหนกแนวทางปฏิบัติที่อ้างอิงกฎหมายท่านต้องดูรายละเอียดข้อกำหนดทางกฎหมายประกอบให้ชัดเจนหรือปรึกษาผู้เชี่ยวชาญเพิ่มเติมก่อนกำหนดแผนงาน แนะนำติดชมที่  LINE: @jedsada
+    I am Dr. Jedsada Tipmontian, Lead Instructor for FSPCA Preventive Controls for Human Food (PCQI for Human Food) Course, FSPCA Preventive Controls for Animal Food (PCQI for Animal Food) Course, FSPCA Foreign Supplier Verification Programs (FSVP), FSPCA and Intentional Adulteration Conducting Vulnerability Assessments (IAVA) under Food Safety Modernization Act (FSMA).  I am an Instructor and Consultant in the field of Regulatory Compliance and Operations Excellence Beyond Standards for Exporting Food to the U.S. (more information at https://beyondstandards.com/jedsada/ )
 
+    I am sending this email inviting you to use the application "FOODPRO BOT".
+    FOODPRO BOT is working as your personal consultant to achieve operations excellence with USFDA compliance. To be eligible for free, please register to start using FOODPRO BOT at {signup_url} by or before August 31, 2024.
 
-    Dear  {greating}
+    I hope this will be useful for your business. This application can give you ideas and guidelines however please be aware that results from FOODPRO BOT  cannot guarantee 100% completion depending on product characteristics and business contexts. You need to refer to concerned laws and regulations or consult with your regulation specialists when you need to apply the answer result in practice.
 
-    I am Dr. Jedsada Tipmontian, Lead Instructor for FSPCA Preventive Controls for Human Food (PCQI for Human Food) Course  FSPCA Preventive Controls for Animal Food  (PCQI for Animal Food) Course, FSPCA Foreign Supplier Verification Programs (FSVP), FSPCA and Intentional Adulteration Conducting Vulnerability Assessments (IAVA)  under  Food Safety Modernization Act (FSMA) I am sending this email to invite you to use the application “foodpro bot”.  Please register to start using  Foodpro Bot at {signup_url}. Foodprobot is working as your personal consultant to work with operations excellence and USFDA compliance. 
+    If you have any suggestions please contact: Dr. Jedsada Tipmontian LINE:@jedsada 
 
-    To reserve your rights to access to this application please sign in by or before August 31, 2024.
-
-    I hope this will be useful for your business and please be aware that result from foodpro bot
-    Cannot give 100% correctly. You need to refer  to law and regulation when you need to apply the answer result in practice. 
-
-    If you have any question or suggestion please contact: Dr. Jedsada Tipmontian LINE:@jedsada
-
-    
-    ขอขอบคุณและแสดงความนับถือ
+    ขอขอบคุณและแสดงความนับถือ,
     ดร.เจษฎา ทิพย์มณเฑียร
-    www.beyondstandrs.com
+    www.beyondstandards.com
     LINE:@jedsada
     """
     body_html = f"""
@@ -259,29 +259,33 @@ def send_signup_email(email: UserEmail):
         <title>Sign Up for Foodpro chatbot App</title>
     </head>
     <body>
-        <p>สวัสดี {greating},</p>
+        <p>สวัสดีครับ คุณ {greating},</p>
 
-        <p>ผม ดร.เจษฎา ทิพย์มณเฑียร Lead Instructor หลักสูตร FSPCA Preventive Controls for Human Food (PCQI for Human Food) หลักสูตร FSPCA Preventive Controls for Animal Food (PCQI for Animal Food) หลักสูตร FSPCA Foreign Supplier Verification Programs (FSVP) หลักสูตร FSPCA Intentional Adulteration Conducting Vulnerability Assessments (IAVA) ส่งข้อความนี้มาเพื่อเชิญท่านเข้าใช้แอพพลิเคชั่น Foodprobot</p>
+        <p>ผม ดร.เจษฎา ทิพย์มณเฑียร หัวหน้าวิทยการ หลักสูตร FSPCA Preventive Controls for Human Food (PCQI for Human Food) หลักสูตร FSPCA Preventive Controls for Animal Food (PCQI for Animal Food) หลักสูตร FSPCA Foreign Supplier Verification Programs (FSVP) หลักสูตร FSPCA Intentional Adulteration Conducting Vulnerability Assessments (IAVA) รวมทั้งวิทยากรและที่ปรึกษาเกี่ยวกับกฎหมายหมาย ระเบียบและการปฏิบัติการที่เป็นเลิศเหนือมาตรฐานเพื่อการส่งออกอาหารไป สหรัฐอเมริกา (ดูประวัติเพิ่มเติมได้ที่ <a href="https://beyondstandards.com/jedsada/">https://beyondstandards.com/jedsada/</a>) ผมส่งข้อความนี้มาเพื่อเชิญท่านเข้าใช้แอพพลิเคชั่น FOODPRO BOT</p>
 
-        <p>Foodprobot เป็น แอพพลิเคชั่น ช่วยให้ท่านมีที่ปรึกษาส่วนตัวเรื่องกฎระเบียบเพื่อส่งออกอาหารไปอเมริกา เพื่อสิทธิการเข้าใช้แอพพลิเคชั่น แบบไม่มีค่าใช้จ่าย โปรดลงทะเบียน <a href="{signup_url}">{signup_url}</a> เพื่อเริ่มใช้ foodprobot ภายใน 31 สิงหาคม 2567 เวลา 24.00 น.</p>
+        <p>FOODPRO BOT เป็นแอพพลิเคชั่น ช่วยให้ท่านเหมือนมีที่ปรึกษาส่วนตัวให้คำแนะนำเรื่องกฎระเบียบเพื่อส่งออกอาหารไปอเมริกา แหล่งข้อมูลอ้างอิงส่วนใหญ่มาจากกฎหมาย ระเบียบและประกาศจากสำนักงานคณะกรรมการอาหารและยาสหรัฐอเมริกาซึ่งเป็นภาษาอังกฤษ ท่านสามารถตั้งคำถามเป็นภาษาไทยได้ แต่การตั้งคำถามที่มีความเฉพาะเจาะจงที่เป็นภาษาอังกฤษจะช่วยให้ท่านได้คำตอบที่ถูกต้องและรวดเร็วขึ้น</p>
 
-        <p>หวังเป็นอย่างยิงว่า เป็น แอพพลิเคชั่น จะช่วยแนะนำข้อมูลที่เป็นประโยชน์ให้กับท่าน อย่างไรก็ตาม โปรดทราบว่าข้อมูลทีได้รับอาจไมjได้ถูกต้องสมบูรณ์ 100% กำนหนกแนวทางปฏิบัติที่อ้างอิงกฎหมายท่านต้องดูรายละเอียดข้อกำหนดทางกฎหมายประกอบให้ชัดเจนหรือปรึกษาผู้เชี่ยวชาญเพิ่มเติมก่อนกำหนดแผนงาน แนะนำติดชมที่ LINE: @jedsada</p>
+        <p>เพื่อรักษาสิทธิการเข้าใช้แอพพลิเคชั่น แบบไม่มีค่าใช้จ่าย โปรดลงทะเบียน <a href="{signup_url}">{signup_url}</a> foodprobot ภายใน 31 สิงหาคม 2567 เวลา 24.00 น.</p>
+
+        <p>ผมหวังว่า แอพพลิเคชั่น FOODPROBOT จะช่วยแนะนำข้อมูลที่เป็นประโยชน์ให้กับท่าน อย่างไรก็ตาม โปรดทราบว่าข้อมูลที่ได้รับจะเป็นอธิบายให้คำตอบเพื่อให้แนวคิดในการกำหนดแนวทางปฏิบัติได้ แต่อาจไม่ได้รับประกันความสมบูรณ์ของคำตอบ 100% ขึ้นอยู่กับรายละเอียดผลิตภัณฑ์และบริบททางธุรกิจเพิ่มเติม ท่านต้องดูรายละเอียดข้อกำหนดทางกฎหมายประกอบให้ชัดเจนหรือปรึกษาผู้เชี่ยวชาญเพิ่มเติมก่อนนำคำตอบไปใช้ ต้องการแนะนำ เสนอแนะติดต่อที่ ดร.เจษฎา ทิพย์มณเฑียร LINE ID:@jedsada</p>
 
         <br><br>
 
         <p>Dear {greating},</p>
 
-        <p>I am Dr. Jedsada Tipmontian, Lead Instructor for FSPCA Preventive Controls for Human Food (PCQI for Human Food) Course, FSPCA Preventive Controls for Animal Food (PCQI for Animal Food) Course, FSPCA Foreign Supplier Verification Programs (FSVP), FSPCA and Intentional Adulteration Conducting Vulnerability Assessments (IAVA) under Food Safety Modernization Act (FSMA). I am sending this email to invite you to use the application “foodpro bot”. Please register to start using Foodpro Bot at <a href={signup_url}>{signup_url}</a>. Foodprobot is working as your personal consultant to work with operations excellence and USFDA compliance.</p>
+        <p>I am Dr. Jedsada Tipmontian, Lead Instructor for FSPCA Preventive Controls for Human Food (PCQI for Human Food) Course, FSPCA Preventive Controls for Animal Food (PCQI for Animal Food) Course, FSPCA Foreign Supplier Verification Programs (FSVP), FSPCA and Intentional Adulteration Conducting Vulnerability Assessments (IAVA) under Food Safety Modernization Act (FSMA). I am an Instructor and Consultant in the field of Regulatory Compliance and Operations Excellence Beyond Standards for Exporting Food to the U.S. (more information at <a href="https://beyondstandards.com/jedsada/">https://beyondstandards.com/jedsada/</a>)</p>
 
-        <p>To reserve your rights to access to this application please sign in by or before August 31, 2024.</p>
+        <p>I am sending this email inviting you to use the application "FOODPRO BOT". FOODPRO BOT is working as your personal consultant to achieve operations excellence with USFDA compliance. To be eligible for free, please register to start using FOODPRO BOT at <a href="{signup_url}">{signup_url}</a> by or before August 31, 2024.</p>
 
-        <p>I hope this will be useful for your business and please be aware that result from foodpro bot cannot give 100% correctly. You need to refer to law and regulation when you need to apply the answer result in practice.</p>
+        <p>I hope this will be useful for your business. This application can give you ideas and guidelines however please be aware that results from FOODPRO BOT cannot guarantee 100% completion depending on product characteristics and business contexts. You need to refer to concerned laws and regulations or consult with your regulation specialists when you need to apply the answer result in practice.</p>
 
-        <p>If you have any question or suggestion please contact: Dr. Jedsada Tipmontian LINE:@jedsada</p>
+        <p>If you have any suggestions please contact: Dr. Jedsada Tipmontian LINE:@jedsada</p>
+
+        <br><br>
 
         <p>ขอขอบคุณและแสดงความนับถือ,<br>
         ดร.เจษฎา ทิพย์มณเฑียร<br>
-        <a href="http://www.beyondstandrs.com">www.beyondstandrs.com</a><br>
+        <a href="http://www.beyondstandards.com">www.beyondstandards.com</a><br>
         LINE:@jedsada</p>
     </body>
     </html>
